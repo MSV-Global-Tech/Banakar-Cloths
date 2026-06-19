@@ -57,9 +57,9 @@ const bestSellers = [
 ];
 
 const reviews = [
-  { quote: "The cut, the cloth, the construction — uncompromising. My overcoat improves every season.", author: "James W.", city: "London" },
-  { quote: "Finally a brand that respects fabric and proportion. The shirts are a quiet luxury.", author: "Hiroshi T.", city: "Tokyo" },
-  { quote: "Tailoring that feels effortless. I've never been more confident in what I wear.", author: "Mathias L.", city: "Copenhagen" },
+  { quote: "The cut, the cloth, the construction — uncompromising. My sherwani fits perfectly.", author: "Arjun M.", city: "Mumbai" },
+  { quote: "Finally a brand that respects fabric and proportion. The shirts are a quiet luxury.", author: "Rahul S.", city: "Delhi" },
+  { quote: "Tailoring that feels effortless. I've never been more confident in what I wear.", author: "Karthik R.", city: "Bengaluru" },
 ];
 
 function Home() {
