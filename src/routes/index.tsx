@@ -236,19 +236,19 @@ function NewArrivals() {
         <div className="relative h-[500px] sm:h-[600px] lg:h-[700px] flex items-center justify-center overflow-hidden">
           <button
             onClick={rotateLeft}
-            className="absolute left-2 sm:left-8 z-20 w-12 h-12 sm:w-14 sm:h-14 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
+            className="absolute left-2 sm:left-8 z-20 w-8 h-8 sm:w-10 sm:h-10 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
             aria-label="Previous"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button
             onClick={rotateRight}
-            className="absolute right-2 sm:right-8 z-20 w-12 h-12 sm:w-14 sm:h-14 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
+            className="absolute right-2 sm:right-8 z-20 w-8 h-8 sm:w-10 sm:h-10 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
             aria-label="Next"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
             </svg>
           </button>
