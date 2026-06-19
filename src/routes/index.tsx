@@ -223,6 +223,12 @@ function NewArrivals() {
   const rotateRight = () => setRotation((prev) => prev - angleStep);
   const rotateLeft = () => setRotation((prev) => prev + angleStep);
 
+  const getNormalizedAngle = (angle: number) => {
+    let normalized = ((angle % 360) + 360) % 360;
+    if (normalized > 180) normalized -= 360;
+    return normalized;
+  };
+
   return (
     <section id="new" className="py-16 sm:py-20 lg:py-32 bg-offwhite">
       <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-12">
@@ -234,10 +240,10 @@ function NewArrivals() {
           </p>
         </div>
 
-        <div className="relative h-[500px] sm:h-[600px] lg:h-[700px] flex items-center justify-center">
+        <div className="relative h-[500px] sm:h-[600px] lg:h-[700px] flex items-center justify-center overflow-hidden">
           <button
             onClick={rotateLeft}
-            className="absolute left-2 sm:left-8 z-10 w-12 h-12 sm:w-14 sm:h-14 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
+            className="absolute left-2 sm:left-8 z-20 w-12 h-12 sm:w-14 sm:h-14 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
             aria-label="Previous"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +252,7 @@ function NewArrivals() {
           </button>
           <button
             onClick={rotateRight}
-            className="absolute right-2 sm:right-8 z-10 w-12 h-12 sm:w-14 sm:h-14 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
+            className="absolute right-2 sm:right-8 z-20 w-12 h-12 sm:w-14 sm:h-14 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
             aria-label="Next"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,32 +261,39 @@ function NewArrivals() {
           </button>
 
           <div
-            className="relative w-[300px] sm:w-[400px] lg:w-[500px] h-[400px] sm:h-[500px] lg:h-[600px] preserve-3d transition-transform duration-500"
+            className="relative w-[300px] sm:w-[400px] lg:w-[500px] h-[400px] sm:h-[500px] lg:h-[600px] preserve-3d transition-transform duration-600"
             style={{
               transform: `rotateY(${rotation}deg)`,
             }}
           >
             {newArrivals.map((product, index) => {
               const angle = index * angleStep;
+              const totalAngle = angle + rotation;
+              const normalizedAngle = getNormalizedAngle(totalAngle);
+              const distanceFromCenter = Math.abs(normalizedAngle);
+              
+              const opacity = Math.max(0.2, 1 - (distanceFromCenter / 120));
+              const scale = Math.max(0.8, 1 - (distanceFromCenter / 300));
+              const z = 300 - (distanceFromCenter * 1.5);
+
               return (
                 <div
                   key={product.name}
-                  className="absolute w-full h-full backface-hidden"
+                  className="absolute w-full h-full flex flex-col items-center justify-center backface-hidden transition-all duration-600"
                   style={{
-                    transform: `rotateY(${angle}deg) translateZ(350px)`,
+                    transform: `rotateY(${angle}deg) translateZ(${z}px) scale(${scale})`,
+                    opacity: opacity,
                   }}
                 >
-                  <div className="w-full h-full flex flex-col items-center justify-center">
-                    <div className="group w-[280px] sm:w-[350px] lg:w-[450px] aspect-[3/4] overflow-hidden bg-beige mb-4">
-                      <img src={product.img} alt={product.name} loading="lazy" width={900} height={1152}
-                        className="w-full h-full object-cover transition-opacity duration-700 group-hover:opacity-0" />
-                      <img src={product.hover} alt="" aria-hidden loading="lazy" width={900} height={1152}
-                        className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-                    </div>
-                    <div className="flex items-start justify-between gap-4 w-[280px] sm:w-[350px] lg:w-[450px]">
-                      <h3 className="text-sm font-normal">{product.name}</h3>
-                      <span className="text-sm text-muted-foreground">{product.price}</span>
-                    </div>
+                  <div className="group w-[280px] sm:w-[350px] lg:w-[450px] aspect-[3/4] overflow-hidden bg-beige mb-4">
+                    <img src={product.img} alt={product.name} loading="lazy" width={900} height={1152}
+                      className="w-full h-full object-cover transition-opacity duration-700 group-hover:opacity-0" />
+                    <img src={product.hover} alt="" aria-hidden loading="lazy" width={900} height={1152}
+                      className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+                  </div>
+                  <div className="flex items-start justify-between gap-4 w-[280px] sm:w-[350px] lg:w-[450px]">
+                    <h3 className="text-sm font-normal">{product.name}</h3>
+                    <span className="text-sm text-muted-foreground">{product.price}</span>
                   </div>
                 </div>
               );
