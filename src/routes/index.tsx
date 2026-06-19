@@ -216,18 +216,11 @@ function ProductCard({ p }: { p: { name: string; price: string; img: string; hov
 }
 
 function NewArrivals() {
-  const [rotation, setRotation] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const itemCount = newArrivals.length;
-  const angleStep = 360 / itemCount;
 
-  const rotateRight = () => setRotation((prev) => prev - angleStep);
-  const rotateLeft = () => setRotation((prev) => prev + angleStep);
-
-  const getNormalizedAngle = (angle: number) => {
-    let normalized = ((angle % 360) + 360) % 360;
-    if (normalized > 180) normalized -= 360;
-    return normalized;
-  };
+  const rotateRight = () => setCurrentIndex((prev) => (prev + 1) % itemCount);
+  const rotateLeft = () => setCurrentIndex((prev) => (prev - 1 + itemCount) % itemCount);
 
   return (
     <section id="new" className="py-16 sm:py-20 lg:py-32 bg-offwhite">
@@ -260,40 +253,72 @@ function NewArrivals() {
             </svg>
           </button>
 
-          <div
-            className="relative w-[300px] sm:w-[400px] lg:w-[500px] h-[400px] sm:h-[500px] lg:h-[600px] preserve-3d transition-transform duration-600"
-            style={{
-              transform: `rotateY(${rotation}deg)`,
-            }}
-          >
+          <div className="relative w-full h-full flex items-center justify-center">
             {newArrivals.map((product, index) => {
-              const angle = index * angleStep;
-              const totalAngle = angle + rotation;
-              const normalizedAngle = getNormalizedAngle(totalAngle);
-              const distanceFromCenter = Math.abs(normalizedAngle);
-              
-              const opacity = Math.max(0.2, 1 - (distanceFromCenter / 120));
-              const scale = Math.max(0.8, 1 - (distanceFromCenter / 300));
-              const z = 300 - (distanceFromCenter * 1.5);
+              const offset = index - currentIndex;
+              let translateX = 0;
+              let rotateY = 0;
+              let scale = 0.8;
+              let opacity = 0.5;
+              let zIndex = 0;
+
+              if (offset === 0) {
+                translateX = 0;
+                rotateY = 0;
+                scale = 1;
+                opacity = 1;
+                zIndex = 10;
+              } else if (offset === 1 || offset === -(itemCount - 1)) {
+                translateX = 250;
+                rotateY = -20;
+                scale = 0.85;
+                opacity = 0.8;
+                zIndex = 5;
+              } else if (offset === -1 || offset === itemCount - 1) {
+                translateX = -250;
+                rotateY = 20;
+                scale = 0.85;
+                opacity = 0.8;
+                zIndex = 5;
+              } else if (offset === 2 || offset === -(itemCount - 2)) {
+                translateX = 450;
+                rotateY = -30;
+                scale = 0.7;
+                opacity = 0.3;
+                zIndex = 1;
+              } else if (offset === -2 || offset === itemCount - 2) {
+                translateX = -450;
+                rotateY = 30;
+                scale = 0.7;
+                opacity = 0.3;
+                zIndex = 1;
+              } else {
+                translateX = offset > 0 ? 600 : -600;
+                opacity = 0;
+                zIndex = 0;
+              }
 
               return (
                 <div
                   key={product.name}
-                  className="absolute w-full h-full flex flex-col items-center justify-center backface-hidden transition-all duration-600"
+                  className="absolute transition-all duration-700 ease-out"
                   style={{
-                    transform: `rotateY(${angle}deg) translateZ(${z}px) scale(${scale})`,
+                    transform: `translateX(${translateX}px) rotateY(${rotateY}deg) scale(${scale})`,
                     opacity: opacity,
+                    zIndex: zIndex,
                   }}
                 >
-                  <div className="group w-[280px] sm:w-[350px] lg:w-[450px] aspect-[3/4] overflow-hidden bg-beige mb-4">
-                    <img src={product.img} alt={product.name} loading="lazy" width={900} height={1152}
-                      className="w-full h-full object-cover transition-opacity duration-700 group-hover:opacity-0" />
-                    <img src={product.hover} alt="" aria-hidden loading="lazy" width={900} height={1152}
-                      className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-                  </div>
-                  <div className="flex items-start justify-between gap-4 w-[280px] sm:w-[350px] lg:w-[450px]">
-                    <h3 className="text-sm font-normal">{product.name}</h3>
-                    <span className="text-sm text-muted-foreground">{product.price}</span>
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="group w-[280px] sm:w-[350px] lg:w-[450px] aspect-[3/4] overflow-hidden bg-beige mb-4">
+                      <img src={product.img} alt={product.name} loading="lazy" width={900} height={1152}
+                        className="w-full h-full object-cover transition-opacity duration-700 group-hover:opacity-0" />
+                      <img src={product.hover} alt="" aria-hidden loading="lazy" width={900} height={1152}
+                        className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+                    </div>
+                    <div className="flex items-start justify-between gap-4 w-[280px] sm:w-[350px] lg:w-[450px]">
+                      <h3 className="text-sm font-normal">{product.name}</h3>
+                      <span className="text-sm text-muted-foreground">{product.price}</span>
+                    </div>
                   </div>
                 </div>
               );
