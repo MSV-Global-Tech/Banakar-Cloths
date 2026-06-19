@@ -216,6 +216,13 @@ function ProductCard({ p }: { p: { name: string; price: string; img: string; hov
 }
 
 function NewArrivals() {
+  const [rotation, setRotation] = useState(0);
+  const itemCount = newArrivals.length;
+  const angleStep = 360 / itemCount;
+
+  const rotateRight = () => setRotation((prev) => prev - angleStep);
+  const rotateLeft = () => setRotation((prev) => prev + angleStep);
+
   return (
     <section id="new" className="py-16 sm:py-20 lg:py-32 bg-offwhite">
       <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-12">
@@ -226,8 +233,59 @@ function NewArrivals() {
             Considered pieces for the new season — refined silhouettes in noble materials.
           </p>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-5 gap-y-10 sm:gap-y-14">
-          {newArrivals.map((p) => <ProductCard key={p.name} p={p} />)}
+
+        <div className="relative h-[500px] sm:h-[600px] lg:h-[700px] flex items-center justify-center">
+          <button
+            onClick={rotateLeft}
+            className="absolute left-2 sm:left-8 z-10 w-12 h-12 sm:w-14 sm:h-14 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
+            aria-label="Previous"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={rotateRight}
+            className="absolute right-2 sm:right-8 z-10 w-12 h-12 sm:w-14 sm:h-14 bg-foreground text-background rounded-full flex items-center justify-center hover:bg-stone transition-colors"
+            aria-label="Next"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          <div
+            className="relative w-[300px] sm:w-[400px] lg:w-[500px] h-[400px] sm:h-[500px] lg:h-[600px] preserve-3d transition-transform duration-500"
+            style={{
+              transform: `rotateY(${rotation}deg)`,
+            }}
+          >
+            {newArrivals.map((product, index) => {
+              const angle = index * angleStep;
+              return (
+                <div
+                  key={product.name}
+                  className="absolute w-full h-full backface-hidden"
+                  style={{
+                    transform: `rotateY(${angle}deg) translateZ(350px)`,
+                  }}
+                >
+                  <div className="w-full h-full flex flex-col items-center justify-center">
+                    <div className="group w-[280px] sm:w-[350px] lg:w-[450px] aspect-[3/4] overflow-hidden bg-beige mb-4">
+                      <img src={product.img} alt={product.name} loading="lazy" width={900} height={1152}
+                        className="w-full h-full object-cover transition-opacity duration-700 group-hover:opacity-0" />
+                      <img src={product.hover} alt="" aria-hidden loading="lazy" width={900} height={1152}
+                        className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+                    </div>
+                    <div className="flex items-start justify-between gap-4 w-[280px] sm:w-[350px] lg:w-[450px]">
+                      <h3 className="text-sm font-normal">{product.name}</h3>
+                      <span className="text-sm text-muted-foreground">{product.price}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

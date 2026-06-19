@@ -125,3 +125,11 @@
 @utility fade-in {
   animation: fadeIn 1.2s ease both;
 }
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
